@@ -64,12 +64,13 @@
 
         /* Header */
         .header {
-            padding: 30px 50px;
+            padding: 25px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--card-border);
             z-index: 10;
+            background: rgba(30, 30, 32, 0.9);
         }
 
         .logo {
@@ -100,7 +101,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 60px 80px;
+            padding: 40px 80px 100px 80px;
+            overflow-y: auto;
+            overflow-x: hidden;
             opacity: 0;
             transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             transform: translateY(20px) scale(0.98);
@@ -108,6 +111,18 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        /* Custom Scrollbar for Slides */
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
         }
 
         .slide.active {
@@ -128,7 +143,8 @@
             letter-spacing: 2px;
             color: var(--accent-blue);
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            margin-top: 20px;
         }
 
         .title-slide h1 {
@@ -148,15 +164,15 @@
         }
 
         .content-slide h2 {
-            font-size: 48px;
-            margin-bottom: 40px;
+            font-size: 44px;
+            margin-bottom: 30px;
         }
 
         .text-content p {
-            font-size: 22px;
+            font-size: 20px;
             color: var(--text-muted);
             line-height: 1.6;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             font-weight: 300;
         }
 
@@ -170,12 +186,13 @@
         }
 
         ul li {
-            font-size: 20px;
+            font-size: 19px;
             color: var(--text-muted);
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             padding-left: 35px;
             position: relative;
             font-weight: 300;
+            line-height: 1.5;
         }
 
         ul li::before {
@@ -218,7 +235,7 @@
         /* Controls */
         .controls {
             position: absolute;
-            bottom: 40px;
+            bottom: 30px;
             right: 50px;
             display: flex;
             gap: 12px;
@@ -261,17 +278,19 @@
             border-radius: 12px;
             font-family: monospace;
             color: #d4d4d8;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
             font-size: 16px;
         }
 
         .callout {
             background: rgba(0, 0, 0, 0.2);
             border-left: 4px solid var(--accent-blue);
-            padding: 24px;
+            padding: 20px 24px;
             border-radius: 0 12px 12px 0;
-            margin-top: 30px;
+            margin-top: 24px;
+            margin-bottom: 20px;
         }
+        .callout p { margin-bottom: 0; }
 
         /* Figma Link Button */
         .figma-link {
@@ -309,6 +328,7 @@
             display: flex;
             align-items: center;
             gap: 80px;
+            margin-top: 20px;
         }
 
         .photo-container {
@@ -320,7 +340,6 @@
             overflow: hidden;
             border: 2px solid var(--card-border);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            cursor: pointer;
         }
 
         .photo-container img {
@@ -330,21 +349,23 @@
             position: absolute;
             top: 0;
             left: 0;
-            transition: opacity 0.4s ease;
+        }
+
+        @keyframes photo-swap {
+            0%, 45% { opacity: 1; }
+            50%, 95% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .photo-container .photo-formal {
             object-position: 50% 12%;
             z-index: 2;
+            animation: photo-swap 4s infinite ease-in-out;
         }
 
         .photo-container .photo-casual {
             object-position: center;
             z-index: 1;
-        }
-
-        .photo-container:hover .photo-formal {
-            opacity: 0;
         }
 
         .closing-info h2 {
@@ -411,7 +432,7 @@
         <!-- Header -->
         <header class="header">
             <div class="logo">XYON</div>
-            <div class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">12</span></div>
+            <div class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">13</span></div>
         </header>
 
         <!-- Slides -->
@@ -419,9 +440,9 @@
             
             <!-- Slide 1 -->
             <div class="slide title-slide active">
-                <div class="slide-tag">Strategic Audit</div>
+                <div class="slide-tag">Preliminary Audit</div>
                 <h1>XYON Health Email Audit</h1>
-                <p>An operational breakdown of the current email architecture, flow logic, and retention mechanics.</p>
+                <p>An operational breakdown of the current email architecture and flow logic.</p>
                 <div style="margin-top: 60px;">
                     <p class="meta-text">BY JOSH ANDREWS</p>
                 </div>
@@ -432,7 +453,7 @@
                 <div class="slide-tag">Methodology</div>
                 <h2>The 48-Hour Mapping</h2>
                 <div class="text-content" style="max-width: 900px;">
-                    <p>To understand the true customer experience, I initiated a live signup test and mapped the exact sequence of emails delivered over a 48-hour window.</p>
+                    <p>To understand the true customer experience, I signed up for your email marketing and mapped the exact sequence of emails delivered over a 48-hour window.</p>
                     <p>I tracked trigger conditions, timestamps, flow overlaps, and rendering issues. You can view the complete visual breakdown of my mapping below.</p>
                     
                     <a href="https://www.figma.com/board/bqOLQ0cl6LjMKtLVrgGlcl/XYON-Health-Email-Marketing?node-id=0-1&p=f&t=gW5bgIINy8F3xacH-0" target="_blank" class="figma-link">
@@ -452,7 +473,7 @@
                         <li><strong>Premium Aesthetic:</strong> Dark backgrounds, clean product photography, and consistent clinical branding look excellent.</li>
                         <li><strong>Multi-Flow Architecture:</strong> Welcome, Browse Abandonment, and Consultation flows are all actively running.</li>
                         <li><strong>Smart Content Strategy:</strong> Each flow has a distinct job (e.g., brand education vs. product retargeting).</li>
-                        <li><strong>High-Converting Social Proof:</strong> The "Real people, real results" email is phenomenal—using age, specific treatments, and clear timelines builds immense trust.</li>
+                        <li><strong>High-Converting Social Proof:</strong> The "Real people, real results" email is phenomenal using age, specific treatments, and clear timelines builds immense trust.</li>
                     </ul>
                 </div>
             </div>
@@ -465,11 +486,15 @@
                 <div class="text-content">
                     <p>Between 4:26 PM and 4:34 PM on April 29, <strong>three separate emails were delivered within an 8-minute window.</strong></p>
                     <ul>
-                        <li>4:26 PM — Mother's Day Campaign</li>
-                        <li>4:31 PM — Browse Abandonment Flow</li>
-                        <li>4:34 PM — Consultation Flow</li>
+                        <li>4:26 PM: Mother's Day Campaign</li>
+                        <li>4:31 PM: Browse Abandonment Flow</li>
+                        <li>4:34 PM: Consultation Flow</li>
                     </ul>
-                    <p style="margin-top: 30px;"><strong>The Impact:</strong> Without global suppression logic, campaigns and flows fire blindly. A customer receiving 3 emails in 8 minutes is highly likely to unsubscribe or report as spam.</p>
+                    <p style="margin-top: 25px;"><strong>The Impact:</strong> Without a careful send strategy, perhaps including smart sending, campaigns and flows fire blindly. A customer receiving 3 emails in 8 minutes is highly likely to unsubscribe or report as spam.</p>
+                    
+                    <div class="callout">
+                        <p>It would be beneficial to pull a frequency report to ensure people aren't getting too many emails within a short amount of time. I dive deeper into this topic in my <a href="https://www.linkedin.com/posts/josh-andrews_are-you-nurturing-your-leads-or-suffocating-share-7452806860652441601-kX8u?utm_source=share&utm_medium=member_desktop&rcm=ACoAACrpsYUBcAaELaSwTAWG9AFzQ6BoTs7SvHg" target="_blank" style="color: var(--accent-blue); text-decoration: none; font-weight: 500;">recent LinkedIn post ↗</a>.</p>
+                    </div>
                 </div>
             </div>
 
@@ -518,7 +543,7 @@
                     <br>
                     <ul>
                         <li>While cross-selling the broader routine in the second touch is a great tactic, a 2-hour delay is likely too aggressive.</li>
-                        <li><strong>The Fix:</strong> Space the second touch to 24–48 hours, and add logic to reset the timer if the user returns to the site between emails.</li>
+                        <li><strong>The Fix:</strong> Space the second touch to 24-48 hours, and add logic to reset the timer if the user returns to the site between emails.</li>
                     </ul>
                 </div>
             </div>
@@ -535,17 +560,22 @@
                         <li><strong>Welcome & Consultation Flows:</strong> List C/O Blakes, Cassels & Graydon LLP and feature 6 social icons.</li>
                         <li><strong>Browse Abandonment Flow:</strong> Lists 18 W 4th Ave, Vancouver and features 4 social icons.</li>
                     </ul>
-                    <p style="margin-top: 30px;">This indicates the flows were likely built piecemeal over time and never standardized, creating a slightly fractured brand experience.</p>
+                    <p style="margin-top: 30px;">This indicates the flows were likely built at different times and never standardized, creating a slightly fractured brand experience.</p>
                 </div>
             </div>
 
-            <!-- Slide 9 -->
+            <!-- Slide 9 (New Transition Slide) -->
+            <div class="slide content-slide" style="align-items: center; text-align: center;">
+                <h2 style="font-size: 64px; margin: 0; background: linear-gradient(to right, #fff, var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">How can I potentially help?</h2>
+            </div>
+
+            <!-- Slide 10 -->
             <div class="slide content-slide">
                 <div class="slide-tag">Retention Focus</div>
                 <h2>The Month 2-4 Onboarding Gap</h2>
                 <span class="badge strategy">Strategy Overview</span>
                 <div class="text-content" style="max-width: 850px;">
-                    <p>Hair loss treatments take 3-6 months to show visible results. The highest churn risk exists between Month 2 and Month 4 when patients are paying but haven't seen changes yet.</p>
+                    <p>Hair loss treatments take 3-6 months to show visible results. Assuming this doesn't exist already, the highest churn risk exists between Month 2 and Month 4 when patients are paying but haven't seen changes yet.</p>
                     <br>
                     <ul>
                         <li><strong>Month 1:</strong> "What's happening beneath the surface."</li>
@@ -558,39 +588,41 @@
                 </div>
             </div>
 
-            <!-- Slide 10 -->
+            <!-- Slide 11 (New Emotional Copy Slide) -->
             <div class="slide content-slide">
-                <div class="slide-tag">Brand Positioning</div>
-                <h2>Premium Retention Framework</h2>
+                <div class="slide-tag">Copy Improvements</div>
+                <h2>Injecting Emotional Resonance</h2>
                 <span class="badge strategy">Strategy Overview</span>
                 <div class="text-content" style="max-width: 850px;">
-                    <p>Discounting devalues a premium medical product. Retention must be driven by value, education, and clinical results.</p>
+                    <p>To maximize retention, the copy needs to deeply resonate with the patient's internal monologue and unspoken pain points.</p>
                     <br>
                     <ul>
-                        <li><strong>Leverage the IP:</strong> Weave SiloxysSystem™ data (92% less bloodstream absorption) deeply into churn-prevention flows. Remind them why XYON is superior.</li>
-                        <li><strong>Parallel Journeys:</strong> Separate the lifecycle infrastructure for Men and Women entirely.</li>
-                        <li><strong>Strategic Cross-Sells:</strong> Automate non-Rx cross-selling (like DHT-blocking shampoo 7 days post-purchase) as a regimen enhancement, not a discount grab.</li>
+                        <li><strong>Acknowledge the Pain:</strong> The frustration of always feeling like you have to wear a hat, struggling to look people in the face, or constantly comparing yourself to the "perfect" guys on TikTok.</li>
+                        <li><strong>Sell the Transformation:</strong> Shift the core focus from just regaining hair to regaining confidence and control.</li>
                     </ul>
+                    <div class="callout">
+                        <p><strong>The Goal:</strong> Use copy that speaks directly to what they are already thinking in their head, building a stronger, more emotional bond with the brand.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Slide 11 -->
+            <!-- Slide 12 -->
             <div class="slide content-slide">
                 <div class="slide-tag">Execution Roadmap</div>
                 <h2>The First 90 Days</h2>
                 <span class="badge strategy">Strategy Overview</span>
                 <div class="text-content" style="max-width: 850px;">
-                    <p>Transitioning from manual campaign management to an automated, high-velocity infrastructure.</p>
+                    <p><em>Based on what I know now. This may change based on the information the team tells me.</em></p>
                     <br>
                     <ul>
                         <li><strong>Days 1-30:</strong> Complete a full Klaviyo audit, fix immediate flow collisions, and build the core Onboarding sequence.</li>
-                        <li><strong>Days 31-60:</strong> Launch dedicated Churn Prevention and Win-Back flows. Implement strict global suppression logic.</li>
-                        <li><strong>Days 61-90:</strong> Establish cohort tracking, begin A/B testing timing/messaging, and actively optimize for long-term LTV.</li>
+                        <li><strong>Days 31-60:</strong> Launch dedicated Churn Prevention and Win-Back flows. Pull a frequency report to ensure patients aren't receiving unnecessary frequent emails.</li>
+                        <li><strong>Days 61-90:</strong> Review existing cohort tracking data, begin A/B testing timing/messaging, and actively optimize for long-term LTV.</li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Slide 12 -->
+            <!-- Slide 13 -->
             <div class="slide content-slide">
                 <div class="closing-layout">
                     <div class="photo-container">
