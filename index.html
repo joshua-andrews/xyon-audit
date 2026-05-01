@@ -110,6 +110,11 @@
             pointer-events: none;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start; /* Fixes top-bleeding on overflow */
+        }
+
+        /* Center the intro title slide */
+        .title-slide {
             justify-content: center;
         }
 
@@ -565,7 +570,7 @@
             </div>
 
             <!-- Slide 9 (New Transition Slide) -->
-            <div class="slide content-slide" style="align-items: center; text-align: center;">
+            <div class="slide content-slide" style="align-items: center; justify-content: center; text-align: center;">
                 <h2 style="font-size: 64px; margin: 0; background: linear-gradient(to right, #fff, var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">How can I potentially help?</h2>
             </div>
 
