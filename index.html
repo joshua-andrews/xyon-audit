@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYON Health Email Audit</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --heading-font: 'IBM Plex Sans Condensed', sans-serif;
+            --body-font: 'IBM Plex Sans', sans-serif;
+            
+            /* Modernized Dark Theme */
+            --bg-base: #121212;
+            --card-bg: rgba(30, 30, 32, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-blue: #365abd;
+            --accent-glow: rgba(54, 90, 189, 0.4);
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            
+            /* Badges */
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --danger-text: #f87171;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-text: #fbbf24;
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --success-text: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background: radial-gradient(circle at top right, #1a1a24 0%, var(--bg-base) 60%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism Container */
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: var(--heading-font);
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .slide-counter {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* Slides */
+        .slides-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px) scale(0.98);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--heading-font);
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .slide-tag {
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .title-slide h1 {
+            font-size: 72px;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .title-slide p {
+            font-size: 24px;
+            color: var(--text-muted);
+            font-weight: 300;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .content-slide h2 {
+            font-size: 48px;
+            margin-bottom: 40px;
+        }
+
+        .text-content p {
+            font-size: 22px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .text-content strong {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        ul li {
+            font-size: 20px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            padding-left: 35px;
+            position: relative;
+            font-weight: 300;
+        }
+
+        ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 18px;
+            height: 1px;
+            background-color: var(--accent-blue);
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+        .badge.critical { 
+            background: var(--danger-bg); 
+            color: var(--danger-text);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .badge.warning { 
+            background: var(--warning-bg); 
+            color: var(--warning-text);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .badge.strategy { 
+            background: var(--success-bg); 
+            color: var(--success-text);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modern Callout / Code block */
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            padding: 24px;
+            border-radius: 12px;
+            font-family: monospace;
+            color: #d4d4d8;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .callout {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--accent-blue);
+            padding: 24px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 30px;
+        }
+
+        /* Figma Link Button */
+        .figma-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-blue);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px var(--accent-glow);
+            margin-top: 20px;
+        }
+
+        .figma-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px var(--accent-glow);
+            background: #446ee5;
+        }
+
+        .meta-text {
+            font-size: 14px; 
+            color: var(--accent-blue); 
+            font-weight: 600; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Closing Slide */
+        .closing-layout {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .closing-photo {
+            width: 260px;
+            height: 260px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 2px solid var(--card-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            flex-shrink: 0;
+        }
+
+        .closing-info h2 {
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .closing-tagline {
+            font-size: 24px;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-btn.primary {
+            background: var(--accent-blue);
+            color: #fff;
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
+
+        .cta-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px var(--accent-glow);
+            background: #446ee5;
+        }
+
+        .cta-btn.outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+        }
+
+        .cta-btn.outline:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">XYON</div>
+            <div class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">12</span></div>
+        </header>
+
+        <!-- Slides -->
+        <div class="slides-wrapper">
+            
+            <!-- Slide 1 -->
+            <div class="slide title-slide active">
+                <div class="slide-tag">Strategic Audit</div>
+                <h1>XYON Health Email Audit</h1>
+                <p>An operational breakdown of the current email architecture, flow logic, and retention mechanics.</p>
+                <div style="margin-top: 60px;">
+                    <p class="meta-text">BY JOSH ANDREWS</p>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Methodology</div>
+                <h2>The 48-Hour Mapping</h2>
+                <div class="text-content" style="max-width: 900px;">
+                    <p>To understand the true customer experience, I initiated a live signup test and mapped the exact sequence of emails delivered over a 48-hour window.</p>
+                    <p>I tracked trigger conditions, timestamps, flow overlaps, and rendering issues. You can view the complete visual breakdown of my mapping below.</p>
+                    
+                    <a href="https://www.figma.com/board/bqOLQ0cl6LjMKtLVrgGlcl/XYON-Health-Email-Marketing?node-id=0-1&p=f&t=gW5bgIINy8F3xacH-0" target="_blank" class="figma-link">
+                        View FigJam Flowchart ↗
+                    </a>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">The Baseline</div>
+                <h2>What's Working Well</h2>
+                <div class="text-content" style="max-width: 800px;">
+                    <p>The foundation is strong. The creative and brand positioning are already in a great place.</p>
+                    <br>
+                    <ul>
+                        <li><strong>Premium Aesthetic:</strong> Dark backgrounds, clean product photography, and consistent clinical branding look excellent.</li>
+                        <li><strong>Multi-Flow Architecture:</strong> Welcome, Browse Abandonment, and Consultation flows are all actively running.</li>
+                        <li><strong>Smart Content Strategy:</strong> Each flow has a distinct job (e.g., brand education vs. product retargeting).</li>
+                        <li><strong>High-Converting Social Proof:</strong> The "Real people, real results" email is phenomenal—using age, specific treatments, and clear timelines builds immense trust.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Gap 01</div>
+                <h2>Flow Collisions & Suppression</h2>
+                <span class="badge critical">Critical Issue</span>
+                <div class="text-content">
+                    <p>Between 4:26 PM and 4:34 PM on April 29, <strong>three separate emails were delivered within an 8-minute window.</strong></p>
+                    <ul>
+                        <li>4:26 PM — Mother's Day Campaign</li>
+                        <li>4:31 PM — Browse Abandonment Flow</li>
+                        <li>4:34 PM — Consultation Flow</li>
+                    </ul>
+                    <p style="margin-top: 30px;"><strong>The Impact:</strong> Without global suppression logic, campaigns and flows fire blindly. A customer receiving 3 emails in 8 minutes is highly likely to unsubscribe or report as spam.</p>
+                </div>
+            </div>
+
+            <!-- Slide 5 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Gap 02</div>
+                <h2>Broken Preview Text</h2>
+                <span class="badge critical">Critical Issue</span>
+                <div class="text-content" style="max-width: 800px;">
+                    <p>Almost every flow email is leaking raw HTML code into the inbox preview text. <em>Note: I only noticed this on the desktop version; mobile appeared fine.</em></p>
+                    
+                    <div class="code-block">
+                        XYON" title="XYON" height="auto"> XYON. Start your consultation.
+                    </div>
+                    
+                    <ul>
+                        <li>The desktop preheader is pulling from a broken <code>alt</code> tag on a header image rather than intentionally set copy.</li>
+                        <li><strong>The Fix:</strong> Audit the templates in Klaviyo and hardcode a hidden, intentional preheader text block.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 6 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Gap 03</div>
+                <h2>Rigid Welcome Cadence</h2>
+                <span class="badge warning">Optimization Opportunity</span>
+                <div class="text-content" style="max-width: 800px;">
+                    <p>The Welcome Flow operates on a strict 24-hour timer, ignoring user behavior in between sends.</p>
+                    <br>
+                    <ul>
+                        <li>Email 1 triggers immediately.</li>
+                        <li>Email 2 triggers exactly 24 hours later.</li>
+                    </ul>
+                    <p style="margin-top: 30px;"><strong>Strategic Shift:</strong> It may be worth testing a behavioral branch here. If a user starts a consultation between Email 1 and Email 2, they could be filtered out of the generic Welcome Flow and moved exclusively into the Consultation Flow.</p>
+                </div>
+            </div>
+
+            <!-- Slide 7 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Gap 04</div>
+                <h2>Aggressive Browse Abandonment</h2>
+                <span class="badge warning">Optimization Opportunity</span>
+                <div class="text-content" style="max-width: 800px;">
+                    <p>Two Browse Abandonment emails were sent for the <em>exact same product</em> (DHT-Blocking Shampoo), spaced only <strong>2 hours apart.</strong></p>
+                    <br>
+                    <ul>
+                        <li>While cross-selling the broader routine in the second touch is a great tactic, a 2-hour delay is likely too aggressive.</li>
+                        <li><strong>The Fix:</strong> Space the second touch to 24–48 hours, and add logic to reset the timer if the user returns to the site between emails.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 8 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Gap 05</div>
+                <h2>Inconsistent Templates</h2>
+                <span class="badge warning">Brand Experience</span>
+                <div class="text-content" style="max-width: 800px;">
+                    <p>Different flows are using entirely different footer layouts and sender addresses.</p>
+                    <br>
+                    <ul>
+                        <li><strong>Welcome & Consultation Flows:</strong> List C/O Blakes, Cassels & Graydon LLP and feature 6 social icons.</li>
+                        <li><strong>Browse Abandonment Flow:</strong> Lists 18 W 4th Ave, Vancouver and features 4 social icons.</li>
+                    </ul>
+                    <p style="margin-top: 30px;">This indicates the flows were likely built piecemeal over time and never standardized, creating a slightly fractured brand experience.</p>
+                </div>
+            </div>
+
+            <!-- Slide 9 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Retention Focus</div>
+                <h2>The Month 2-4 Onboarding Gap</h2>
+                <span class="badge strategy">Strategy Overview</span>
+                <div class="text-content" style="max-width: 850px;">
+                    <p>Hair loss treatments take 3-6 months to show visible results. The highest churn risk exists between Month 2 and Month 4 when patients are paying but haven't seen changes yet.</p>
+                    <br>
+                    <ul>
+                        <li><strong>Month 1:</strong> "What's happening beneath the surface."</li>
+                        <li><strong>Month 2:</strong> "Shedding is a normal part of the process."</li>
+                        <li><strong>Month 3:</strong> "What to start looking for."</li>
+                    </ul>
+                    <div class="callout">
+                        <p><strong>The Takeaway:</strong> Education is the strongest churn prevention. If patients understand the medical timeline upfront, they stay subscribed long enough to see the results.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Brand Positioning</div>
+                <h2>Premium Retention Framework</h2>
+                <span class="badge strategy">Strategy Overview</span>
+                <div class="text-content" style="max-width: 850px;">
+                    <p>Discounting devalues a premium medical product. Retention must be driven by value, education, and clinical results.</p>
+                    <br>
+                    <ul>
+                        <li><strong>Leverage the IP:</strong> Weave SiloxysSystem™ data (92% less bloodstream absorption) deeply into churn-prevention flows. Remind them why XYON is superior.</li>
+                        <li><strong>Parallel Journeys:</strong> Separate the lifecycle infrastructure for Men and Women entirely.</li>
+                        <li><strong>Strategic Cross-Sells:</strong> Automate non-Rx cross-selling (like DHT-blocking shampoo 7 days post-purchase) as a regimen enhancement, not a discount grab.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 11 -->
+            <div class="slide content-slide">
+                <div class="slide-tag">Execution Roadmap</div>
+                <h2>The First 90 Days</h2>
+                <span class="badge strategy">Strategy Overview</span>
+                <div class="text-content" style="max-width: 850px;">
+                    <p>Transitioning from manual campaign management to an automated, high-velocity infrastructure.</p>
+                    <br>
+                    <ul>
+                        <li><strong>Days 1-30:</strong> Complete a full Klaviyo audit, fix immediate flow collisions, and build the core Onboarding sequence.</li>
+                        <li><strong>Days 31-60:</strong> Launch dedicated Churn Prevention and Win-Back flows. Implement strict global suppression logic.</li>
+                        <li><strong>Days 61-90:</strong> Establish cohort tracking, begin A/B testing timing/messaging, and actively optimize for long-term LTV.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slide 12 -->
+            <div class="slide content-slide">
+                <div class="closing-layout">
+                    <img src="josh.jpeg" alt="Josh Andrews" class="closing-photo">
+                    <div class="closing-info">
+                        <h2>Josh Andrews</h2>
+                        <p class="closing-tagline">Strong hairline. Stronger lifecycle strategy.</p>
+                        <div class="cta-group">
+                            <a href="https://www.linkedin.com/feed/" target="_blank" class="cta-btn primary">LinkedIn ↗</a>
+                            <a href="https://joshandrewz.com/" target="_blank" class="cta-btn outline">Portfolio ↗</a>
+                            <a href="audit-template.html" target="_blank" class="cta-btn outline">Audit Template ↗</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button id="prev-btn" disabled>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <button id="next-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentSlideEl = document.getElementById('current-slide');
+        
+        let currentSlide = 0;
+
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            currentSlideEl.innerText = currentSlide + 1;
+            
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            } else if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        });
+    </script>
+</body>
+</html>
